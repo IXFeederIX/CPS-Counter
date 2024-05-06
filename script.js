@@ -26,6 +26,7 @@ let result = 0;
 let countdown= 3;
 let finalpic;
 let totalSec;
+
 let totalMin;
 let cpsCounter = true;
 
@@ -82,7 +83,7 @@ containerBody.addEventListener("click",(e)=>{
      
 
             function giveCpsAvg() {
-                console.log("hi")
+                console.log(cpsRate)
    if (hasTriggered === true) {
                 resultCtn.style.display = "flex";
                 console.log("Time's up!");
@@ -95,7 +96,13 @@ containerBody.addEventListener("click",(e)=>{
               
             
                 time.innerHTML = ele.innerHTML
-
+                
+                
+                getLowest = () =>{
+         
+                    lowestResult.innerHTML = ""
+                    return Math.min(...cpsRate)
+                   }
                 getAvg = () =>{
                    
                     avgResult.innerHTML = ""
@@ -109,18 +116,38 @@ containerBody.addEventListener("click",(e)=>{
                 
                     return (sum / length).toFixed(3);
                 }
+                 
+        
+             
                getHighest = () => {
              
                 highestResult.innerHTML = ""
-              return Math.max(...cpsRate)
+                if (cpsCounter.length === 0) {
+                    return null; // Empty array
+                }
+            
+                const frequencyMap = {};
+                let maxNumber = cpsCounter[0];
+                let maxCount = 1;
+            
+                for (let i = 0; i < cpsRate.length; i++) {
+                    const currentNumber = cpsRate[i];
+            
+                    if (!frequencyMap[currentNumber]) {
+                        frequencyMap[currentNumber] = 1;
+                    } else {
+                        frequencyMap[currentNumber]++;
+                    }
+            
+                    if (frequencyMap[currentNumber] > maxCount) {
+                        maxNumber = currentNumber;
+                        maxCount = frequencyMap[currentNumber];
+                    }
+                }
+            
+                return maxNumber.toFixed(3);
                }
-               getLowest = () =>{
-         
-                lowestResult.innerHTML = ""
-                return Math.min(...cpsRate)
-               }
-               
-              
+             
               
             avg = getAvg(); // Average CPS
                 highest = getHighest(); // Highest CPS
@@ -240,7 +267,6 @@ index++;
       
       
             const restart = document.querySelector(".restart").addEventListener("click",(e)=>{
-              
                 countdown = 3
                 setTimeout(() => {
                 hasTriggered = false;
@@ -254,8 +280,10 @@ index++;
                 resultCtn.style.display = "none"
                 score.innerHTML = 0
     setCountDown()
-  
-    
+
+    setTimeout(() => {
+        cpsRate = []
+    }, 1000);
                    })
    
 
@@ -274,15 +302,17 @@ setCountDown()
         if(cpsCounter === true){
             const timeDiff = (new Date()) - started;
             const cpsCount = clicks / timeDiff * 1000;
-          
-            if (!isFinite(cpsCount)) {
-              return 0;
+      
+            if (!isFinite(cpsCount) || countdown < 3) {
+            
+                return 0;
+             
             }
         let arrayCount = cpsCount.toFixed(3)
         cpsRate.push(parseInt(arrayCount))
             return cpsCount.toFixed(3);
         }else{
-//// do nothing
+            return 0;
         }
       
         
@@ -304,11 +334,17 @@ setCountDown()
     }
     
     function start() {
-       
         started = new Date();
         clicks = 0;
         this.onmousedown = count;
         this.onmousedown();
+    
+ 
+        if (countdown < 3) {
+           
+            started = new Date()
+        }
+    
         return false;
     }
     
