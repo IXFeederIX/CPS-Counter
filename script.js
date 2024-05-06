@@ -121,31 +121,7 @@ containerBody.addEventListener("click",(e)=>{
              
                getHighest = () => {
              
-                highestResult.innerHTML = ""
-                if (cpsCounter.length === 0) {
-                    return null; // Empty array
-                }
-            
-                const frequencyMap = {};
-                let maxNumber = cpsCounter[0];
-                let maxCount = 1;
-            
-                for (let i = 0; i < cpsRate.length; i++) {
-                    const currentNumber = cpsRate[i];
-            
-                    if (!frequencyMap[currentNumber]) {
-                        frequencyMap[currentNumber] = 1;
-                    } else {
-                        frequencyMap[currentNumber]++;
-                    }
-            
-                    if (frequencyMap[currentNumber] > maxCount) {
-                        maxNumber = currentNumber;
-                        maxCount = frequencyMap[currentNumber];
-                    }
-                }
-            
-                return maxNumber.toFixed(3);
+    return Math.max(...cpsRate)
                }
              
               
@@ -267,20 +243,21 @@ index++;
       
       
             const restart = document.querySelector(".restart").addEventListener("click",(e)=>{
+                e.preventDefault()
+                difficultyPic.src = "./img/0.webp"
+                 cpsCounter = true;
+                 containerBody.style.display = "flex"
+                 resultCtn.style.display = "none"
+                 score.innerHTML = 0
+     setCountDown()
+ 
                 countdown = 3
                 setTimeout(() => {
                 hasTriggered = false;
             }, 500);
              
             
-                e.preventDefault()
-               difficultyPic.src = "./img/0.webp"
-                cpsCounter = true;
-                containerBody.style.display = "flex"
-                resultCtn.style.display = "none"
-                score.innerHTML = 0
-    setCountDown()
-
+        
     setTimeout(() => {
         cpsRate = []
     }, 1000);
